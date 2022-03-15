@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geoportal</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="./Style/Style.css" type="text/css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="#">Geoportal</a>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#"><span class="badge badge-pill badge-info" id="legend">Convenciones</span><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="badge badge-pill badge-info" id="measure">Medir</span><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="badge badge-pill badge-info" id="locate">Localizar</span><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="badge badge-pill badge-info" id="addData">Agregar Datos</span><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="badge badge-pill badge-info" id="dragAndDrop">Arrastrar y Soltar</span><span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="badge badge-pill badge-info" id="printMap">Imprimir Mapa</span><span class="sr-only">(current)</span></a>
+                </li>
+                </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Código Catastral" id="codigoCatastral" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" id="search" type="submit">Buscar</button>
+            </form>
+        </div>
+    </nav>
+
+    <div id="map"></div>
+
+    <!-- Draggable Legend DIV -->
+    <div id="legendDrag">
+        <div id="legend-header">
+            <div id="legend-title">Title</div>
+            <a href="#" id="legend-closer" class="ol-popup-closer"></a>
+        </div>
+        <div id="legend-content"></div>
+
+    </div>
+
+    <!-- Draggable Legend DIV -->
+    <div id="draggable">
+        <div id="draggable-header">
+            <div id="draggable-title">Title</div>
+            <a href="#" id="draggable-closer" class="ol-popup-closer"></a>
+        </div>
+        <div id="draggable-content"></div>
+
+    </div>
+
+    <!-- Draggable Legend DIV -->
+    <div id="dropDrag">
+        <div id="dropDrag-header">
+            <div id="dropDrag-title">Añadir Datos</div>
+            <a href="#" id="dropDrag-closer" class="ol-popup-closer"></a>
+        </div>
+        <div id="dropDrag-content"></div>
+        <form id="myForm">
+            <input type="file" id="csvFile" accept=".csv" />
+            <br />
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+
+    </div>
+
+    <div id="popup" class="ol-popup">
+        <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+        <div id="popup-content"></div>
+        <div id="info"></div>
+    </div>
+
+    <script src="./Scripts/Map.js"></script>
+    <script src="./Scripts/Identify.js"></script>
+    <script src="./Scripts/Legend.js"></script>
+    <script src="./Scripts/Measure.js"></script>
+    <script src="./Scripts/Geolocate.js"></script>
+    <script src="./Scripts/AddData.js"></script>
+    <script src="./Scripts/Search.js"></script>
+    <script src="./Scripts/DragAndDrop.js"></script>
+    <script src="./Scripts/Print.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+{
+    "name": "webmapapp",
+    "version": "1.0.0",
+    "description": "PIGCC",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "parcel index.html",
+        "build": "parcel build --public-url . index.html"
+    },
+    "author": "jmburbano-cdtorog",
+    "license": "ISC",
+    "dependencies": {
+        "@camptocamp/inkmap": "^1.2.0",
+        "jquery": "^3.6.0",
+        "jquery-csv": "^1.0.21",
+        "jspdf": "^2.5.1",
+        "ol": "^6.13.0",
+        "ol-ext": "^3.2.22",
+        "ol-layerswitcher": "^3.8.3"
+    },
+    "devDependencies": {
+        "parcel-bundler": "^1.12.5"
+    }
+}
