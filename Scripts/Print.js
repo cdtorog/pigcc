@@ -18,23 +18,29 @@ $('#printMap').click(function() {
     `);
     $('#draggable').css('display', 'block')
 
-    const layers = []
-    layers.push($('#map').data('layergroup').getLayers());
-    layers.push($('#map').data('basemaps').getLayers());
+    const layers = $('#map').data('layergroup').getLayers()
+
+    //layers.push($('#map').data('basemaps').getLayers());
     const visibleLayers = [];
     const mapCenter = map.getView().getCenter();
 
     layers.forEach(element => {
-        element.forEach(element => {
-            if (element.getVisible()) {
-                visibleLayers.push(element);
-            }
-        })
+        if (element.getVisible()) {
+            var layerName = "picgcc:" + element.get("name");
+            var opacity = element.get("opacity");
+            console.log(layerName)
+            visibleLayers.push({
+                "type": "WMS",
+                "url": "http://189.50.208.110:8080/geoserver/pigcc/wms",
+                layer: layerName,
+                "tiled": true,
+                "opacity": opacity,
+                "attribution": "© OpenStreetMap (www.openstreetmap.org), Terrestris GmbH"
+            });
+        }
+
     })
-
     console.log(visibleLayers);
-
-
 
     // our rectangle (width to height ratio is √2 as per DIN paper formats)
     const rectWidth = 0.1;
@@ -65,8 +71,6 @@ $('#printMap').click(function() {
         keepAspectRatio: conditionAlways,
         rotate: false
     });
-
-    console.log(vectorLayer);
 
     map.addLayer(vectorLayer);
     map.addInteraction(transform);
@@ -109,21 +113,7 @@ $('#printMap').click(function() {
         console.log(visibleLayers, size, center, scale)
             // let's print!
         print({
-            layers: [{
-                    "type": "WMS",
-                    "url": "http://189.50.208.110:8080/geoserver/pigcc/wms",
-                    "layer": "pigcc:cobertura",
-                    "tiled": true,
-                    "attribution": "© OpenStreetMap (www.openstreetmap.org), Terrestris GmbH"
-                },
-                {
-                    "type": "WMS",
-                    "url": "http://189.50.208.110:8080/geoserver/pigcc/wms",
-                    "layer": "pigcc:predios",
-                    "tiled": true,
-                    "attribution": "© OpenStreetMap (www.openstreetmap.org), Terrestris GmbH"
-                }
-            ],
+            layers: visibleLayers,
             dpi: 150,
             size: size,
             center: center,
