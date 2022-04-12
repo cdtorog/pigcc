@@ -2,6 +2,8 @@ import DragAndDrop from 'ol/interaction/DragAndDrop';
 import { GPX, GeoJSON, IGC, KML, TopoJSON } from 'ol/format';
 import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
+import Style from 'ol/style/Style';
+import Stroke from 'ol/style/Stroke';
 
 const map = $('#map').data('map');
 
@@ -10,10 +12,17 @@ $('#dragAndDrop').click(function() {
 
     $('#draggable-title').html('Arrastrar y Soltar');
     $('#draggable-content').html(`<p class="h6">Esta herramienta le permite arrastrar</p><p class="h6"> y soltar en el mapa diferentes archivos</p><p class="h6">para su visualizacion</p>
-    <p class="h6">Los formatos de archivo aceptados son:<p class="h6">GPX   GeoJSON   IGC   KML   TopoJSON  </p>
+    <p class="h6">Los formatos de archivo aceptados son:<p class="h6">GPX   GeoJSON   IGC   KML   TopoJSON  Shp(.zip)</p>
     `);
     $('#draggable').css('display', 'block')
     let dragAndDropInteraction;
+
+    const featureStyle = new Style({
+        stroke: new Stroke({
+            color: 'red',
+            width: 1
+        })
+    });
 
     function setInteraction() {
         if (dragAndDropInteraction) {
@@ -71,15 +80,15 @@ $('#dragAndDrop').click(function() {
         const files = event.dataTransfer.files;
         for (let i = 0, ii = files.length; i < ii; ++i) {
             const file = files.item(i);
-            loadshp({ url: file, encoding: 'utf-8' }, function(geojson) {
-                const features = new ol.format.GeoJSON().readFeatures(
+            loadshp({ url: file, encoding: 'utf-8', EPSG: 4686 }, function(geojson) {
+                const features = new GeoJSON().readFeatures(
                     geojson, { featureProjection: map.getView().getProjection() }
                 );
-                const vectorSource = new ol.source.Vector({
+                const vectorSource = new VectorSource({
                     features: features
                 });
                 map.addLayer(
-                    new ol.layer.Vector({
+                    new VectorLayer({
                         source: vectorSource,
                         style: featureStyle
                     })

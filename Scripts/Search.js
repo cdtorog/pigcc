@@ -6,22 +6,6 @@ import { GeoJSON } from "ol/format";
 
 const map = $('#map').data('map');
 
-const wfsUrl = 'http://gisserviciosclimaticos.uniquindio.edu.co:8080/geoserver/pigcc/wfs';
-const vectorSource = new VectorSource();
-const style = new Style({
-    stroke: new Stroke({
-        color: 'blue',
-        width: 2
-    })
-
-})
-const vector = new Vector({
-    source: vectorSource,
-    style: style
-});
-
-map.addLayer(vector);
-
 document.getElementById("search").addEventListener("click", function(event) {
     event.preventDefault()
     const codigoCatastral = $('#codigoCatastral').val().toString();
@@ -35,35 +19,30 @@ document.getElementById("search").addEventListener("click", function(event) {
     console.log("hola")
     console.log(codigoCatastral)
 
-    const CQL_FILTER = "codigo=" + codigoCatastral;
-    console.log(CQL_FILTER)
+    var url = "http://gisserviciosclimaticos.uniquindio.edu.co:8080/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=pigcc:predios&CQL_FILTER=codigo='" + codigoCatastral + "'&outputFormat=application/json"
 
-    const featureRequest = {
-        "service": "WFS",
-        "request": "GetFeature",
-        "typename": "pigcc:predios",
-        "outputFormat": "application/json",
-        "srsname": "EPSG:4326",
-        "maxFeatures": 50,
-        "CQL_FILTER": CQL_FILTER
-    };
-
-    console.log(featureRequest)
-
-    fetch(wfsUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(featureRequest)
-    }).then(function(json) {
-        if (json.status == !null) {
-            var features = new GeoJSON().readFeatures(reponse);
-            vectorSource.clear(true);
-            vectorSource.addFeatures(features);
-            //map.getView().fit(vectorSource.getExtent());
-        } else {
-            // window.alert('No se encontraron predios');
-        }
+    const vectorSource = new VectorSource({
+        url: url,
+        format: new GeoJSON()
+    });
+    const style = new Style({
+        stroke: new Stroke({
+            color: 'blue',
+            width: 2
+        })
     })
-})
+    const vector = new Vector({
+        source: vectorSource,
+        style: style
+    });
+
+    console.log(vectorSource.getFeatures());
+
+
+    map.addLayer(vector);
+    vector.getSource().on('addfeature', function() {
+        map.getView().fit(
+            vectorSource.getExtent(), { duration: 1590, size: map.getSize(), padding: [100, 100, 100, 100] }
+        );
+    });
+});

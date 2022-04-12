@@ -1,5 +1,5 @@
 import 'ol/ol.css';
-import { Circle, Fill, Style } from 'ol/style';
+import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { Feature, Map, Overlay, View } from 'ol/index';
 import { OSM, Vector as VectorSource } from 'ol/source';
 import { Point } from 'ol/geom';
@@ -34,7 +34,7 @@ $('#locate').click(function() {
         const lat = $('#lat').val();
         const lon = $('#lon').val();
         console.log(lat, lon)
-        const point = new Point(fromLonLat([lon, lat], 'EPSG:4326'));
+        const point = new Point(fromLonLat([lon, lat], 'EPSG:4326'), );
         var layer = new VectorLayer({
             source: new VectorSource({
                 features: [
@@ -44,6 +44,19 @@ $('#locate').click(function() {
                 ]
             })
         });
+        layer.getSource().getFeatures()[0].setStyle(new Style({
+            image: new CircleStyle({
+                radius: 7,
+                fill: new Fill({
+                    color: [255, 128, 0, 1],
+                }),
+                stroke: new Stroke({
+                    color: [255, 255, 255, 0.75],
+                    width: 1.5,
+                }),
+            }),
+            zIndex: 100000,
+        }));
         map.addLayer(layer);
         view.fit(point, { padding: [170, 50, 30, 150], maxZoom: 17 });
 

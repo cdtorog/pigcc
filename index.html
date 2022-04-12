@@ -40,6 +40,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#"><span class="badge badge-pill badge-info" id="printMap">Imprimir Mapa</span><span class="sr-only">(current)</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><span class="badge badge-pill badge-info" id="report">Generar Informe</span><span class="sr-only">(current)</span></a>
+                </li>
                 </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
@@ -49,7 +52,9 @@
         </div>
     </nav>
 
-    <div id="map"></div>
+    <div id="map">
+        <div id="reporte"></div>
+    </div>
 
     <!-- Draggable Legend DIV -->
     <div id="legendDrag">
@@ -80,9 +85,31 @@
         <div id="dropDrag-content"></div>
         <form id="myForm">
             <input type="file" id="csvFile" accept=".csv" />
-            <br />
-            <input type="submit" value="Submit" />
+            <br>
+            <br>
+            <input type="submit" value="Subir" />
         </form>
+    </div>
+
+    <!-- Draggable Report DIV -->
+    <div id="reportDrag">
+        <div id="reportDrag-header">
+            <div id="reportDrag-title">Añadir Datos</div>
+            <a href="#" id="reportDrag-closer" class="ol-popup-closer"></a>
+        </div>
+        <div id="reportDrag-content"></div>
+        <div>
+            <p>Use esta herramienta para agregar ubicaciones al<br> mapa y luego generar un informe que contenga <br> los datos de las capas sobre las cuales se localiza<br> cada punto.</p>
+            <p>Este informe puede ser exportado a PDF.</p>
+        </div>
+        <br>
+        <form id="reportForm">
+            <input type="file" id="reportCsvFile" accept=".csv" />
+            <br><br>
+            <input type="submit" value="Agregar" />
+        </form>
+        <br>
+        <input type="submit" value="Generar Reporte" />
     </div>
 
     </div>
@@ -93,6 +120,8 @@
         <div id="info"></div>
     </div>
 
+
+
     <script src="./Scripts/Map.js"></script>
     <script src="./Scripts/Identify.js"></script>
     <script src="./Scripts/Legend.js"></script>
@@ -102,6 +131,12 @@
     <script src="./Scripts/Search.js"></script>
     <script src="./Scripts/DragAndDrop.js"></script>
     <script src="./Scripts/Print.js"></script>
+    <script src="./Scripts/Report.js"></script>
+    <script src="https://gipong.github.io/shp2geojson.js/lib/jszip.js"></script>
+    <script src="https://gipong.github.io/shp2geojson.js/lib/jszip-utils.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.6.1/proj4.js"></script>
+    <script src="https://gipong.github.io/shp2geojson.js/preprocess.js"></script>
+    <script src="https://gipong.github.io/shp2geojson.js/preview.js"></script>
 </body>
 
 </html>

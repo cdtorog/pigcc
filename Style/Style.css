@@ -173,3 +173,22 @@
     background-color: #000000;
     color: #fff;
 }
+
+#reportDrag {
+    position: absolute;
+    z-index: 9;
+    background-color: #f1f1f1;
+    border: 1px solid #d3d3d3;
+    text-align: left;
+    top: 70px;
+    left: 70px;
+    display: none;
+}
+
+#reportDrag-header {
+    padding: 1px;
+    cursor: move;
+    z-index: 10;
+    background-color: #000000;
+    color: #fff;
+}

@@ -92,7 +92,7 @@ map.on('singleclick', function(evt) {
                     //alert(dat[i]);
                     $("#popup-content").append(data);
                     //document.getElementById('popup-content').innerHTML = '<p>Feature Info</p><code>' + data + '</code>';
-
+                    console.log(data);
                     overlay.setPosition(coordinate);
 
                     //layerSwitcher.renderPanel();

@@ -1,20 +1,17 @@
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import { Map, View } from 'ol';
-import { Stamen, Vector as VectorSource } from 'ol/source';
+import { Vector as VectorSource } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
-import { data } from 'jquery';
+import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 
 var csv = require('jquery-csv');
 const map = $('#map').data('map');
-const view = $('#map').data('view');
-
 const myForm = document.getElementById("myForm");
 const csvFile = document.getElementById("csvFile");
 
 myForm.addEventListener("submit", function(e) {
+    console.log("hola")
     e.preventDefault();
     const input = csvFile.files[0];
     console.log(typeof(input))
@@ -43,6 +40,23 @@ myForm.addEventListener("submit", function(e) {
         const meteorites = new VectorLayer({
             source: source,
         });
+
+        var stylePoint = new Style({
+            image: new CircleStyle({
+                radius: 7,
+                fill: new Fill({
+                    color: [255, 128, 0, 1],
+                }),
+                stroke: new Stroke({
+                    color: [255, 255, 255, 0.75],
+                    width: 1.5,
+                }),
+            }),
+            zIndex: 100000,
+        });
+        meteorites.getSource().getFeatures().forEach(function(e) {
+            e.setStyle(stylePoint)
+        })
         map.addLayer(meteorites);
     }
 });
@@ -53,7 +67,6 @@ const closer = $('#dropDrag-closer');
 
 $('#addData').click(function() {
     const dropDrag = $('#dropDrag');
-    const ev = $('drop_zone').even();
     dropDrag.css('display', 'block')
 })
 
