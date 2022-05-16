@@ -16,8 +16,6 @@ document.getElementById("search").addEventListener("click", function(event) {
     if (codigoCatastral.length > 0 && codigoCatastral.length < 30) {
         window.alert('Por favor ingrese un código catastral completo (30 Caracteres)');
     }
-    console.log("hola")
-    console.log(codigoCatastral)
 
     var url = "http://gisserviciosclimaticos.uniquindio.edu.co:8080/geoserver/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=pigcc:predios&CQL_FILTER=codigo='" + codigoCatastral + "'&outputFormat=application/json"
 
@@ -35,8 +33,6 @@ document.getElementById("search").addEventListener("click", function(event) {
         source: vectorSource,
         style: style
     });
-
-    console.log(vectorSource.getFeatures());
 
 
     map.addLayer(vector);

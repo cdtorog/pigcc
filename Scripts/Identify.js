@@ -48,7 +48,7 @@ map.on('singleclick', function(evt) {
         //alert(coordinate1);
         $("#popup-content").empty();
 
-        document.getElementById('info').innerHTML = '';
+        //document.getElementById('info').innerHTML = '';
         var no_layers = overlays.getLayers().get('length');
         // alert(no_layers);
         var url = new Array();
@@ -58,50 +58,31 @@ map.on('singleclick', function(evt) {
 
         var i;
         for (i = 0; i < no_layers; i++) {
-            //alert(overlays.getLayers().item(i).getVisible());
+            //get visibility properti for echa item
             var visibility = overlays.getLayers().item(i).getVisible();
-            //alert(visibility);
+            //check visibility
             if (visibility == true) {
-                //alert(i);
+                //get name from each layer
                 layer_title[i] = overlays.getLayers().item(i).get('name');
-                // alert(layer_title[i]);
+                // define wms query
                 wmsSource[i] = new ImageWMS({
                     url: 'http://189.50.208.110:8080/geoserver/pigcc/wms',
                     params: { 'LAYERS': layer_title[i] },
                     serverType: 'geoserver',
                     crossOrigin: 'anonymous'
                 });
-                //alert(wmsSource[i]);
-                //var coordinate2 = evt.coordinate;
-                // alert(coordinate);
+
                 url[i] = wmsSource[i].getFeatureInfoUrl(
                     evt.coordinate, viewResolution, 'EPSG:4326', { 'INFO_FORMAT': 'text/html' });
-                console.log(evt.coordinate)
-                    //  alert(url[i]);
-                console.log(url[i]);
-                //assuming you use jquery
+
+
+                //get data from result
                 $.get(url[i], function(data) {
-                    //alert(i);
-                    //append the returned html data
-
-
-                    // $("#info").html(data);
-                    //document.getElementById('info').innerHTML = data;
-                    //document.getElementById('popup-content').innerHTML = '<p>Feature Info</p><code>' + data + '</code>';
-
-                    //alert(dat[i]);
+                    //add data to popup
                     $("#popup-content").append(data);
-                    //document.getElementById('popup-content').innerHTML = '<p>Feature Info</p><code>' + data + '</code>';
-                    console.log(data);
                     overlay.setPosition(coordinate);
 
-                    //layerSwitcher.renderPanel();
                 });
-                //alert(layer_title[i]);
-                //alert(fid1[0]);
-
-
-
             }
         }
     }

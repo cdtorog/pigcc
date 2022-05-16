@@ -57,6 +57,10 @@
     content: "✖";
 }
 
+.ol-popup-closer:after:hover {
+    color: red;
+}
+
 #popup a:link {
     text-decoration: none;
 }
@@ -162,16 +166,49 @@
     border: 1px solid #d3d3d3;
     text-align: left;
     top: 70px;
-    left: 70px;
     display: none;
+    left: 70px;
+    width: 400px;
+    border-radius: 4px;
+}
+
+#dropDrag-content {
+    padding: 4px;
+}
+
+#myForm {
+    padding: 4px;
+    align-items: center;
+    text-align: center;
+}
+
+.inputFile {
+    width: 370px;
+    border-color: aqua;
+    margin-bottom: 10px;
+}
+
+.inputFile:hover {
+    background-color: rgb(236, 244, 244);
+}
+
+.buttonFile {
+    border-color: #28A745;
+}
+
+.buttonFile:hover {
+    background-color: #28A745;
+    color: #ffffff;
+    border-color: #28A745;
 }
 
 #dropDrag-header {
     padding: 1px;
     cursor: move;
     z-index: 10;
-    background-color: #000000;
+    background-color: #343a40;
     color: #fff;
+    text-align: center;
 }
 
 #reportDrag {
@@ -191,4 +228,24 @@
     z-index: 10;
     background-color: #000000;
     color: #fff;
+}
+
+.reporte {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.box {
+    width: 75%;
+    position: absolute;
+    top: 5;
+    left: 10;
+    opacity: 0;
+    /* for demo purpose  */
+}
+
+.stack-top {
+    z-index: 9;
+    margin: 20px;
+    /* for demo purpose  */
 }

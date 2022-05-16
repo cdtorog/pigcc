@@ -11,23 +11,21 @@ const myForm = document.getElementById("myForm");
 const csvFile = document.getElementById("csvFile");
 
 myForm.addEventListener("submit", function(e) {
-    console.log("hola")
     e.preventDefault();
     const input = csvFile.files[0];
-    console.log(typeof(input))
     const source = new VectorSource();
     const features = [];
     var reader = new FileReader();
     reader.readAsText(input);
+
     reader.onload = function(event) {
+
         var csv = event.target.result;
         var data = $.csv.toArrays(csv);
 
         data.forEach(element => {
 
             const coords = fromLonLat([(element[0]), (element[1])], 'EPSG:4326');
-
-            console.log(coords)
 
             features.push(
                 new Feature({
@@ -36,8 +34,9 @@ myForm.addEventListener("submit", function(e) {
             );
 
         });
+
         source.addFeatures(features);
-        const meteorites = new VectorLayer({
+        const csvPoints = new VectorLayer({
             source: source,
         });
 
@@ -54,10 +53,11 @@ myForm.addEventListener("submit", function(e) {
             }),
             zIndex: 100000,
         });
-        meteorites.getSource().getFeatures().forEach(function(e) {
+
+        csvPoints.getSource().getFeatures().forEach(function(e) {
             e.setStyle(stylePoint)
         })
-        map.addLayer(meteorites);
+        map.addLayer(csvPoints);
     }
 });
 

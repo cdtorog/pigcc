@@ -4,7 +4,7 @@ import Feature from 'ol/Feature';
 import { Polygon } from 'ol/geom';
 import { always as conditionAlways } from 'ol/events/condition';
 import TransformInteraction from 'ol-ext/interaction/Transform';
-import { fromLonLat, toLonLat } from "ol/proj";
+import { fromLonLat, toLonLat, transform } from "ol/proj";
 import { getDistance } from "ol/sphere";
 import { downloadBlob, print } from "@camptocamp/inkmap";
 import { jsPDF } from "jspdf";
@@ -20,7 +20,6 @@ $('#printMap').click(function() {
 
     const layers = $('#map').data('layergroup').getLayers()
 
-    //layers.push($('#map').data('basemaps').getLayers());
     const visibleLayers = [];
     const mapCenter = map.getView().getCenter();
 
@@ -28,7 +27,6 @@ $('#printMap').click(function() {
         if (element.getVisible()) {
             var layerName = "picgcc:" + element.get("name");
             var opacity = element.get("opacity");
-            console.log(layerName)
             visibleLayers.push({
                 "type": "WMS",
                 "url": "http://189.50.208.110:8080/geoserver/pigcc/wms",
@@ -40,7 +38,6 @@ $('#printMap').click(function() {
         }
 
     })
-    console.log(visibleLayers);
 
     // our rectangle (width to height ratio is √2 as per DIN paper formats)
     const rectWidth = 0.1;
@@ -88,11 +85,8 @@ $('#printMap').click(function() {
     function printAndDownload(rectangleGeometry) {
         // first get the geometry center in longitude/latitude
         const geomExtent = rectangleGeometry.getExtent();
-        console.log(geomExtent)
         const center = rectangleGeometry.getInteriorPoint().getCoordinates();
-        console.log(center);
         center.pop();
-        console.log(center);
 
 
         // let's target a final format of A4:
@@ -110,8 +104,7 @@ $('#printMap').click(function() {
         // paper size is in mm so we need to multiply by 1000!
         const scale = geomWidthMeters * 1000 / size[0];
 
-        console.log(visibleLayers, size, center, scale)
-            // let's print!
+        // let's print!
         print({
             layers: visibleLayers,
             dpi: 150,
@@ -138,11 +131,21 @@ $('#printMap').click(function() {
             // add a title
             doc.setFont('times', 'bold');
             doc.setFontSize(20);
-            doc.text('Plan Integral para la Gestion del Cambio Climatico', 148.5, 15, null, null, 'left');
+            doc.text('Plan Integral para la Gestion del Cambio Climatico', 10, 15, null, null, 'left');
 
             // download the result
             doc.save('Mapa.pdf');
         });
     }
-
+    $('#draggable-closer').click(function() {
+        $('#draggable').css('display', 'none');
+        $('#draggable-title').html('none');
+        map.removeInteraction(transform);
+        map.removeLayer(vectorLayer)
+        map.getView().set({
+            projection: 'EPSG:4326',
+            center: [-75.66612430009317, 4.418912598262188], //Coordinates of center
+            zoom: 10 //zoom level of map
+        })
+    });
 });

@@ -1,7 +1,6 @@
 import 'ol/ol.css';
 import Draw from 'ol/interaction/Draw';
 import Overlay from 'ol/Overlay';
-import View from 'ol/View';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import { LineString, Polygon } from 'ol/geom';
 import { Vector as VectorSource } from 'ol/source';
@@ -33,6 +32,9 @@ const vector = new VectorLayer({
     }),
 });
 
+/**
+ * create measure tool selection form.
+ */
 $('#measure').click(function() {
     $('#draggable-title').html('Herramienta Medida');
     $('#draggable-content').html(`<form class="form-inline">
@@ -127,7 +129,6 @@ function Measure() {
     map.addLayer(vector)
     map.on('pointermove', pointerMoveHandler);
 
-    console.log(map.getViewport, "Salto", map.getLength)
 
     map.getViewport().addEventListener('mouseout', function() {
         helpTooltipElement.classList.add('hidden');

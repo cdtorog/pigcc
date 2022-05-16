@@ -30,14 +30,15 @@ $('#dragAndDrop').click(function() {
         }
         dragAndDropInteraction = new DragAndDrop({
             formatConstructors: [
+                // files extensions
                 GPX,
                 GeoJSON,
                 IGC,
-                // use constructed format to set options
                 new KML({ extractStyles: true }),
                 TopoJSON,
             ],
         });
+
         dragAndDropInteraction.on('addfeatures', function(event) {
             const vectorSource = new VectorSource({
                 features: event.features,
@@ -49,6 +50,7 @@ $('#dragAndDrop').click(function() {
             );
             map.getView().fit(vectorSource.getExtent());
         });
+
         map.addInteraction(dragAndDropInteraction);
     }
 

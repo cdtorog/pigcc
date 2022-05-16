@@ -21,7 +21,9 @@ var view = new View({
 
 })
 
-//Define layers to layerswitcher
+/**
+ * Create layersgroup from wms service, this layers will be show at layerswitcher elemet
+ */
 var layergroup = new LayerGroup({
     'title': 'Capas',
     layers: [
@@ -203,6 +205,9 @@ var layergroup = new LayerGroup({
     ]
 });
 
+/**
+ * add basemap to layerswitcher elemets
+ */
 var base_maps = new LayerGroup({
     'title': 'Mapas Base',
     layers: [
@@ -269,6 +274,7 @@ const map = new Map({
     view: view
 })
 
+//add controls to webmapy
 map.addControl(slider);
 map.addControl(zoom);
 map.addControl(full_sc);

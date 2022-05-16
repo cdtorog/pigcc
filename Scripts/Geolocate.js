@@ -1,15 +1,16 @@
 import 'ol/ol.css';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
-import { Feature, Map, Overlay, View } from 'ol/index';
-import { OSM, Vector as VectorSource } from 'ol/source';
+import { Feature } from 'ol/index';
+import { Vector as VectorSource } from 'ol/source';
 import { Point } from 'ol/geom';
-import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
+import { Vector as VectorLayer } from 'ol/layer';
 import { fromLonLat } from 'ol/proj';
 
 
 const map = $('#map').data('map');
 const view = $('#map').data('view');
 
+//create geolocate form in tool div.
 $('#locate').click(function() {
     $('#draggable-title').html('Coordenadas Decimales');
     $('#draggable-content').html(`<form>
@@ -29,11 +30,13 @@ $('#locate').click(function() {
       </div>
     </div>
   </form>`);
+
     $('#draggable').css('display', 'block')
+
+    //creates the geometry of the found point
     $('#goto').click(function() {
         const lat = $('#lat').val();
         const lon = $('#lon').val();
-        console.log(lat, lon)
         const point = new Point(fromLonLat([lon, lat], 'EPSG:4326'), );
         var layer = new VectorLayer({
             source: new VectorSource({
@@ -44,6 +47,8 @@ $('#locate').click(function() {
                 ]
             })
         });
+
+        //create geometry style
         layer.getSource().getFeatures()[0].setStyle(new Style({
             image: new CircleStyle({
                 radius: 7,
@@ -57,9 +62,12 @@ $('#locate').click(function() {
             }),
             zIndex: 100000,
         }));
+
+        //add layer and ajust zoom to fit
         map.addLayer(layer);
         view.fit(point, { padding: [170, 50, 30, 150], maxZoom: 17 });
 
+        //close tool and remove interactions
         $('#draggable-closer').click(function() {
             $('#draggable').css('display', 'none');
             $('#draggable-title').html('none');
@@ -68,7 +76,4 @@ $('#locate').click(function() {
             map.getInteractions().pop();
         });
     });
-
-
-
 });

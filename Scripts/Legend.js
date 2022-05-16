@@ -1,3 +1,7 @@
+/**
+ * Create legend function to get map legend from wms service
+ * the content it's show at draggable div
+ */
 function legend(overlays) {
     let no_layers = parseInt(overlays.getLayers().get('length'));
     var head = document.createElement("h4");
@@ -21,7 +25,6 @@ function legend(overlays) {
         img.src = ar[i];
         var src = document.getElementById("legend-content");
         src.appendChild(img);
-        console.log(document.getElementById("legend-content"))
     }
 }
 

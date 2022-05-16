@@ -5,16 +5,20 @@ import { ImageWMS, Vector as VectorSource } from 'ol/source';
 import { fromLonLat } from 'ol/proj';
 import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 
+
 var csv = require('jquery-csv');
 const map = $('#map').data('map');
-const myForm = document.getElementById("reportForm");
+const reportForm = document.getElementById("reportForm");
+const csvForm = document.getElementById("csvForm");
 const csvFile = document.getElementById("reportCsvFile");
 const viewResolution = $('#map').data('view').getResolution();
 const overlays = $('#map').data('layergroup')
-$("report").empty();
+    //document.getElementById("reporte").innerHTML += "<h1>Reporte PICGG</h1>";
 var pointsCoordinates;
+const repo = document.getElementById('reporte');
 
-myForm.addEventListener("submit", function(e) {
+
+csvForm.addEventListener("submit", function(e) {
     e.preventDefault();
     const input = csvFile.files[0];
     const source = new VectorSource();
@@ -29,8 +33,6 @@ myForm.addEventListener("submit", function(e) {
         data.forEach(element => {
 
             const coords = fromLonLat([(element[0]), (element[1])], 'EPSG:4326');
-
-            console.log(coords)
 
             features.push(
                 new Feature({
@@ -65,44 +67,48 @@ myForm.addEventListener("submit", function(e) {
     }
 });
 
-myForm.addEventListener("submit", function(e) {
-    var no_layers = overlays.getLayers().get('length');
-    var url = new Array();
-    var wmsSource = new Array();
-    var layer_title = new Array();
+reportForm.addEventListener("submit", function(e) {
     var i;
-    for (i = 0; i < no_layers; i++) {
-        var visibility = overlays.getLayers().item(i).getVisible();
-        if (visibility == true) {
-            layer_title[i] = overlays.getLayers().item(i).get('name');
-            wmsSource[i] = new ImageWMS({
-                url: 'http://189.50.208.110:8080/geoserver/pigcc/wms',
-                params: { 'LAYERS': layer_title[i] },
-                serverType: 'geoserver',
-                crossOrigin: 'anonymous'
-            });
-            pointsCoordinates.forEach(element => {
+    var coords;
+    //$("#reporte").empty()
+    $("#reporte").append('<h2>Reporte PICGG</h2>')
+    let eaches = [];
+    eaches.push(pointsCoordinates.forEach(element => {
+        coords = fromLonLat([(element[0] * 1), (element[1] * 1)], 'EPSG:4326');
 
-                const coords = fromLonLat([(element[0] * 1), (element[1] * 1)], 'EPSG:4326');
-                url[i] = wmsSource[i].getFeatureInfoUrl(
-                    coords, viewResolution, 'EPSG:4326', { 'INFO_FORMAT': 'text/html' });
-                var linea = "<h2>Punto: " + i + " Coordenadas: " + coords + "</h2>";
-                $("report").append(linea);
+        let fetches = [];
+        overlays.getLayers().forEach(item => {
+            fetches.push(fetch((item.getSource().getFeatureInfoUrl(coords, viewResolution, 'EPSG:4326', { 'INFO_FORMAT': 'text/html' }))).then((response) => response.text())
+                .then((html) => {
+                    if (html != 'undefined') {
+                        $("#reporte").append(html)
+                    }
 
-                $.get(url[i], function(data) {
-                    $("report").append(data);
-                    console.log(data)
+                }))
+            Promise.all(fetches).then((responses) => {
+                responses.forEach((response) => {
+
                 });
+            })
+        })
+        Promise.all(eaches).then((responses) => {
+            responses.forEach((response) => {
 
             });
-        }
-    }
-    console.log("fin")
-    console.log($("report"))
+        })
+    }))
+
+    reporte()
+    closer.click()
 });
 
 
-
+function abrirEnPestana(codigo) {
+    // var reporte = document.getElementById("reporte");
+    //var informe = document.createElement("div");
+    var reportwindow = window.open("", "Reporte PIGCC")
+    reportwindow.document.write(codigo)
+}
 const closer = $('#reportDrag-closer');
 
 
@@ -110,6 +116,24 @@ $('#report').click(function() {
     const dropDrag = $('#reportDrag');
     dropDrag.css('display', 'block')
 })
+
+function reporte() {
+    const repoDiv = $('#reporte');
+    repoDiv.css('display', 'block')
+    reportOption()
+}
+
+function reportOption() {
+    var resultado = window.confirm('Su informe esta listo pulse aceptar para abrirlo en una nueva pestaña o cancelar para descargarlo');
+    if (resultado === true) {
+        var codigo = document.getElementById("reporte").innerHTML
+        abrirEnPestana(codigo);
+    } else {
+        var printDoc = new jsPDF('p', 'pt', 'a4');
+        printDoc.fromHTML($('#reporte').get(0), 10, 10, { 'width': 180 });
+        printDoc.save('html.pdf')
+    }
+}
 
 closer.click(function() {
     $('#reportDrag').css('display', 'none')
