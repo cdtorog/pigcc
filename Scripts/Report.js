@@ -14,10 +14,10 @@ const csvFile = document.getElementById("reportCsvFile");
 const viewResolution = $('#map').data('view').getResolution();
 const overlays = $('#map').data('layergroup')
     //document.getElementById("reporte").innerHTML += "<h1>Reporte PICGG</h1>";
-var pointsCoordinates;
+var pointsCoordinates = [];
 const repo = document.getElementById('reporte');
 
-
+var respHtml = [];
 csvForm.addEventListener("submit", function(e) {
     e.preventDefault();
     const input = csvFile.files[0];
@@ -28,12 +28,28 @@ csvForm.addEventListener("submit", function(e) {
     reader.onload = function(event) {
         var csv = event.target.result;
         var data = $.csv.toArrays(csv);
-        pointsCoordinates = data;
 
+
+        let fetches = [];
         data.forEach(element => {
 
-            const coords = fromLonLat([(element[0]), (element[1])], 'EPSG:4326');
+            var coords = fromLonLat([(element[0]), (element[1])], 'EPSG:4326');
+            pointsCoordinates.push(coords)
+            overlays.getLayers().forEach(item => {
+                fetches.push(fetch((item.getSource().getFeatureInfoUrl(coords, viewResolution, 'EPSG:4326', { 'INFO_FORMAT': 'text/html' }))).then((response) => response.text())
+                    .then((html) => {
+                        if (html != 'undefined') {
+                            //$("#reporte").append(html)
+                            respHtml.push(html);
+                        }
 
+                    }))
+                Promise.all(fetches).then((responses) => {
+                    responses.forEach((response) => {
+
+                    });
+                })
+            })
             features.push(
                 new Feature({
                     geometry: new Point(coords),
@@ -68,35 +84,19 @@ csvForm.addEventListener("submit", function(e) {
 });
 
 reportForm.addEventListener("submit", function(e) {
-    var i;
+    var i = 0;
     var coords;
-    //$("#reporte").empty()
+    console.log(respHtml.length, pointsCoordinates.length)
+        //$("#reporte").empty()
     $("#reporte").append('<h2>Reporte PICGG</h2>')
-    let eaches = [];
-    eaches.push(pointsCoordinates.forEach(element => {
-        coords = fromLonLat([(element[0] * 1), (element[1] * 1)], 'EPSG:4326');
-
-        let fetches = [];
-        overlays.getLayers().forEach(item => {
-            fetches.push(fetch((item.getSource().getFeatureInfoUrl(coords, viewResolution, 'EPSG:4326', { 'INFO_FORMAT': 'text/html' }))).then((response) => response.text())
-                .then((html) => {
-                    if (html != 'undefined') {
-                        $("#reporte").append(html)
-                    }
-
-                }))
-            Promise.all(fetches).then((responses) => {
-                responses.forEach((response) => {
-
-                });
-            })
+    pointsCoordinates.forEach(element => {
+        $("#reporte").append("Lon: ", element[0], " - Lat: ", element[1]);
+        overlays.getLayers().forEach(element => {
+            $("#reporte").append(respHtml[i])
+            i++;
         })
-        Promise.all(eaches).then((responses) => {
-            responses.forEach((response) => {
 
-            });
-        })
-    }))
+    })
 
     reporte()
     closer.click()
